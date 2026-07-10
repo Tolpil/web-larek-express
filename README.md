@@ -98,9 +98,22 @@
   - Добавлен `UnauthorizedError` (401) в [`errors/index.ts`](backend/src/errors/index.ts)
   - Обновлён [`config.ts`](backend/src/config.ts): `JWT_SECRET`, `AUTH_ACCESS_TOKEN_EXPIRY`, `AUTH_REFRESH_TOKEN_EXPIRY`, `ORIGIN_ALLOW`
 
+- [x] **Шаг 7: Загрузка файлов и CRUD товаров**
+  - Установлены пакеты: `multer`, `cron`
+  - Создан мидлвар [`file`](backend/src/middlewares/file.ts) — multer с загрузкой в `temp/`, лимит 5 MB, фильтр изображений
+  - Создан контроллер [`upload`](backend/src/controllers/upload.ts) — `POST /upload`, возврат `{ fileName, originalName }`
+  - Создан роут [`upload`](backend/src/routes/upload.ts) — подключён `fileMiddleware.single('file')`
+  - Обновлён контроллер [`product`](backend/src/controllers/product.ts):
+    - `createProduct` — перемещает файл из `temp/` в `public/images/`
+    - `updateProduct` — `PATCH /product/:productId`, обновление полей, перемещение файла
+    - `deleteProduct` — `DELETE /product/:productId`, удаление товара и его изображения
+  - Обновлён роут [`product`](backend/src/routes/product.ts) — добавлены `PATCH` и `DELETE`
+  - Обновлена модель [`product`](backend/src/models/product.ts) — триггер `post('findOneAndDelete')` для удаления файла
+  - Обновлён [`app.ts`](backend/src/app.ts) — подключён `uploadRouter` на `/upload`
+  - Обновлён [`config.ts`](backend/src/config.ts) — добавлены `UPLOAD_PATH`, `UPLOAD_PATH_TEMP`
+
 #### ⏳ Ожидают выполнения
 
-- [ ] Шаг 7: Загрузка файлов (аватар, изображения товаров)
 - [ ] Шаг 8: Создание pull request `reviews-admin` → `admin`
 
 ---

@@ -5,6 +5,8 @@ const {
   AUTH_ACCESS_TOKEN_EXPIRY = '10m',
   AUTH_REFRESH_TOKEN_EXPIRY = '7d',
   ORIGIN_ALLOW = 'http://localhost:5173',
+  UPLOAD_PATH = 'public/images',
+  UPLOAD_PATH_TEMP = 'temp',
 } = process.env;
 
 export {
@@ -14,4 +16,6 @@ export {
   AUTH_ACCESS_TOKEN_EXPIRY,
   AUTH_REFRESH_TOKEN_EXPIRY,
   ORIGIN_ALLOW,
+  UPLOAD_PATH,
+  UPLOAD_PATH_TEMP,
 };

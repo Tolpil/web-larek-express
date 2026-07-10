@@ -7,6 +7,7 @@ import { errors } from 'celebrate';
 import productRouter from './routes/product';
 import orderRouter from './routes/order';
 import authRouter from './routes/auth';
+import uploadRouter from './routes/upload';
 import { requestLogger, errorLogger } from './middlewares/logger';
 import errorHandler from './middlewares/error-handler';
 import { NotFoundError } from './errors';
@@ -25,6 +26,7 @@ app.use(requestLogger);
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+app.use('/upload', uploadRouter);
 app.use(productRouter);
 app.use(orderRouter);
 app.use(authRouter);

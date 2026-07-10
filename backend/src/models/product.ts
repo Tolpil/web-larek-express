@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import path from 'path';
+import fs from 'fs';
 
 export interface IProduct {
   title: string;
@@ -34,6 +36,16 @@ const productSchema = new mongoose.Schema<IProduct>({
     type: Number,
     default: null,
   },
+});
+
+productSchema.post('findOneAndDelete', function (doc) {
+  if (doc && doc.image && doc.image.fileName) {
+    const fileName = path.basename(doc.image.fileName);
+    const filePath = path.join(__dirname, '..', '..', 'public', 'images', fileName);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  }
 });
 
 export default mongoose.model<IProduct>('product', productSchema);
