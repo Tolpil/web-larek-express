@@ -60,10 +60,15 @@
   - Валидация `POST /order`: payment (card|online), email, phone, address, total, items
   - Обновлена схема Mongoose с сообщениями об ошибках
   - Обработка ошибок celebrate через `app.use(errors())`
+- [x] **Шаг 5: Логирование запросов и ошибок**
+  - Установлены `express-winston` и `winston`
+  - `requestLogger` — логи всех запросов в `request.log`
+  - `errorLogger` — логи ошибок в `error.log`
+  - Логгеры подключены в правильном порядке (requestLogger до роутов, errorLogger после)
+  - `*.log` в `.gitignore`
 
 ### ⏳ Ожидают выполнения
 
-- [ ] Шаг 5: ...
 - [ ] Отправка на проверку
 
 ---
