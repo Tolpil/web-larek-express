@@ -8,8 +8,7 @@ import orderRouter from './routes/order';
 import { requestLogger, errorLogger } from './middlewares/logger';
 import errorHandler from './middlewares/error-handler';
 import { NotFoundError } from './errors';
-
-const { PORT = 3000, DB_ADDRESS = 'mongodb://127.0.0.1:27017/weblarek' } = process.env;
+import { PORT, DB_ADDRESS } from './config';
 
 const app = express();
 
