@@ -1,33 +1,38 @@
 import mongoose from 'mongoose';
 
 export interface IProduct {
-  name: string;
-  description: string;
+  title: string;
+  image: {
+    fileName: string;
+    originalName: string;
+  };
   category: string;
-  price: number;
-  image: string;
+  description?: string;
+  price?: number | null;
 }
 
 const productSchema = new mongoose.Schema<IProduct>({
-  name: {
+  title: {
     type: String,
     required: true,
+    unique: true,
+    minlength: 2,
+    maxlength: 30,
   },
-  description: {
-    type: String,
+  image: {
+    type: Object,
     required: true,
   },
   category: {
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+  },
   price: {
     type: Number,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: true,
+    default: null,
   },
 });
 

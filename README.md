@@ -38,13 +38,17 @@
   - `npm run start` — запуск через `ts-node`
   - `npm run dev` — запуск с авто-перезагрузкой (nodemon)
 - [x] **Модель товара** — создана схема `Product` (name, description, category, price, image)
+- [x] **Шаг 2: База данных, контроллеры и роуты**
+  - Обновлена модель `Product` (title, image-объект, опциональные price/description)
+  - Контроллеры: `getProducts`, `createProduct`, `createOrder`
+  - Роуты: `GET /product`, `POST /product`, `POST /order`
+  - Подключена MongoDB (`mongoose.connect`)
+  - Раздача статики через `express.static('public')`
+  - Валидация заказа: проверка items, price, total, payment
 
 ### ⏳ Ожидают выполнения
 
-- [ ] Шаг 2: Создание роутов и контроллеров
-- [ ] Шаг 3: Подключение к MongoDB
-- [ ] Шаг 4: Обработка ошибок
-- [ ] Шаг 5: Тестирование API
+- [ ] Шаг 3: ...
 - [ ] Отправка на проверку
 
 ---
