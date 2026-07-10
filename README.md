@@ -45,6 +45,15 @@
   - Подключена MongoDB (`mongoose.connect`)
   - Раздача статики через `express.static('public')`
   - Валидация заказа: проверка items, price, total, payment
+  - Загружены картинки товаров в `backend/public/images/`
+  - Создан скрипт `seed.ts` для заполнения БД (команда `npm run seed`)
+  - В БД загружено 10 товаров из `product.json`
+- [x] **Шаг 3: Централизованная обработка ошибок**
+  - Классы ошибок: `BadRequestError` (400), `NotFoundError` (404), `ConflictError` (409)
+  - Мидлвар `errorHandler` для централизованной обработки
+  - Контроллеры передают ошибки через `next(error)`
+  - Обработка `ValidationError` (400) и `E11000` duplicate key (409)
+  - Роут 404 для несуществующих маршрутов
 
 ### ⏳ Ожидают выполнения
 
