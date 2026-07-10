@@ -97,27 +97,12 @@ export const register = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const getCurrentUser = (req: Request, res: Response, next: NextFunction) => {
-  const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new UnauthorizedError('Необходима авторизация');
-  }
-
-  const token = authorization.replace('Bearer ', '');
-
-  let payload: TokenPayload;
-  try {
-    payload = jwt.verify(token, JWT_SECRET) as TokenPayload;
-  } catch {
-    throw new UnauthorizedError('Невалидный токен');
-  }
-
-  User.findById(payload._id)
+  User.findById(req.user?._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        return next(new NotFoundError('Пользователь не найден'));
       }
-      res.send({
+      return res.send({
         user: {
           email: user.email,
           name: user.name,
@@ -128,82 +113,85 @@ export const getCurrentUser = (req: Request, res: Response, next: NextFunction) 
     .catch(next);
 };
 
-export const logout = (req: Request, res: Response, next: NextFunction) => {
-  const { refreshToken } = req.cookies;
-
-  if (!refreshToken) {
-    throw new BadRequestError('Невалидный _id');
-  }
-
-  let payload: TokenPayload;
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    payload = jwt.verify(refreshToken, JWT_SECRET) as TokenPayload;
-  } catch {
-    throw new BadRequestError('Невалидный _id');
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return next(new BadRequestError('Невалидный _id'));
+    }
+
+    let payload: TokenPayload;
+    try {
+      payload = jwt.verify(refreshToken, JWT_SECRET) as TokenPayload;
+    } catch {
+      return next(new BadRequestError('Невалидный _id'));
+    }
+
+    const user = await User.findById(payload._id).select('+tokens');
+
+    if (!user) {
+      return next(new NotFoundError('Пользователь не найден'));
+    }
+
+    user.tokens = user.tokens.filter((t) => t.token !== refreshToken);
+    await user.save();
+
+    res.cookie('refreshToken', '', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false,
+      maxAge: 0,
+      path: '/',
+    });
+    return res.send({ success: true });
+  } catch (err) {
+    return next(err);
   }
-
-  User.findById(payload._id).select('+tokens')
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь не найден');
-      }
-
-      user.tokens = user.tokens.filter((t) => t.token !== refreshToken);
-      return user.save();
-    })
-    .then(() => {
-      res.cookie('refreshToken', '', {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: false,
-        maxAge: 0,
-        path: '/',
-      });
-      res.send({ success: true });
-    })
-    .catch(next);
 };
 
-export const refreshAccessToken = (req: Request, res: Response, next: NextFunction) => {
-  const { refreshToken } = req.cookies;
-
-  if (!refreshToken) {
-    throw new UnauthorizedError('Невалидный токен');
-  }
-
-  let payload: TokenPayload;
+export const refreshAccessToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    payload = jwt.verify(refreshToken, JWT_SECRET) as TokenPayload;
-  } catch {
-    throw new UnauthorizedError('Невалидный токен');
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return next(new UnauthorizedError('Невалидный токен'));
+    }
+
+    let payload: TokenPayload;
+    try {
+      payload = jwt.verify(refreshToken, JWT_SECRET) as TokenPayload;
+    } catch {
+      return next(new UnauthorizedError('Невалидный токен'));
+    }
+
+    const user = await User.findById(payload._id).select('+tokens');
+
+    if (!user) {
+      return next(new UnauthorizedError('Невалидный токен'));
+    }
+
+    const tokenExists = user.tokens.some((t) => t.token === refreshToken);
+    if (!tokenExists) {
+      return next(new UnauthorizedError('Невалидный токен'));
+    }
+
+    const tokens = generateTokens(user._id.toString());
+
+    user.tokens = user.tokens.filter((t) => t.token !== refreshToken);
+    user.tokens.push({ token: tokens.refreshToken });
+    await user.save();
+
+    setRefreshTokenCookie(res, tokens.refreshToken);
+    return res.send({
+      user: {
+        email: user.email,
+        name: user.name,
+      },
+      success: true,
+      accessToken: tokens.accessToken,
+    });
+  } catch (err) {
+    return next(err);
   }
-
-  User.findById(payload._id).select('+tokens')
-    .then((user) => {
-      if (!user) {
-        throw new UnauthorizedError('Невалидный токен');
-      }
-
-      const tokenExists = user.tokens.some((t) => t.token === refreshToken);
-      if (!tokenExists) {
-        throw new UnauthorizedError('Невалидный токен');
-      }
-
-      const tokens = generateTokens(user._id.toString());
-
-      user.tokens = user.tokens.filter((t) => t.token !== refreshToken);
-      user.tokens.push({ token: tokens.refreshToken });
-      return user.save().then(() => {
-        setRefreshTokenCookie(res, tokens.refreshToken);
-        res.send({
-          user: {
-            email: user.email,
-            name: user.name,
-          },
-          success: true,
-          accessToken: tokens.accessToken,
-        });
-      });
-    })
-    .catch(next);
 };
