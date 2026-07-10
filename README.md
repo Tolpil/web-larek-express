@@ -88,7 +88,7 @@
   - Создан контроллер [`auth`](backend/src/controllers/auth.ts):
     - `login` — аутентификация, возврат accessToken + httpOnly refreshToken
     - `register` — регистрация, хеширование пароля, возврат токенов
-    - `getCurrentUser` — получение пользователя по Bearer-токену
+    - `getCurrentUser` — получение текущего пользователя через `auth` мидлвар (использует `req.user._id`)
     - `logout` — удаление refreshToken из БД, очистка куки
     - `refreshAccessToken` — обновление пары токенов по refreshToken из куки
   - Создан роут [`auth`](backend/src/routes/auth.ts):
