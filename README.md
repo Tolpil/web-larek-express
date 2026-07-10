@@ -112,9 +112,17 @@
   - Обновлён [`app.ts`](backend/src/app.ts) — подключён `uploadRouter` на `/upload`
   - Обновлён [`config.ts`](backend/src/config.ts) — добавлены `UPLOAD_PATH`, `UPLOAD_PATH_TEMP`
 
+- [x] **Шаг 8: Защита API авторизацией**
+  - Создан мидлвар [`auth`](backend/src/middlewares/auth.ts) — проверка Bearer-токена, верификация JWT, подстановка `req.user`
+  - Защищены роуты:
+    - `POST /product`, `PATCH /product/:productId`, `DELETE /product/:productId` — через `auth` в [`product.ts`](backend/src/routes/product.ts)
+    - `GET /auth/user` — через `auth` в [`auth.ts`](backend/src/routes/auth.ts)
+    - `POST /upload` — через `auth` в [`upload.ts`](backend/src/routes/upload.ts)
+  - Неавторизованные запросы возвращают `401 UnauthorizedError`
+
 #### ⏳ Ожидают выполнения
 
-- [ ] Шаг 8: Создание pull request `reviews-admin` → `admin`
+- [ ] Создание pull request `reviews-admin` → `admin`
 
 ---
 
