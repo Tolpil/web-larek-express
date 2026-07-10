@@ -54,10 +54,16 @@
   - Контроллеры передают ошибки через `next(error)`
   - Обработка `ValidationError` (400) и `E11000` duplicate key (409)
   - Роут 404 для несуществующих маршрутов
+- [x] **Шаг 4: Валидация данных**
+  - Установлен `celebrate` + `joi`
+  - Валидация `POST /product`: title (2-30 символов), image (объект), category, description, price
+  - Валидация `POST /order`: payment (card|online), email, phone, address, total, items
+  - Обновлена схема Mongoose с сообщениями об ошибках
+  - Обработка ошибок celebrate через `app.use(errors())`
 
 ### ⏳ Ожидают выполнения
 
-- [ ] Шаг 3: ...
+- [ ] Шаг 5: ...
 - [ ] Отправка на проверку
 
 ---

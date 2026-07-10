@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import path from 'path';
+import { errors } from 'celebrate';
 import productRouter from './routes/product';
 import orderRouter from './routes/order';
 import errorHandler from './middlewares/error-handler';
@@ -18,6 +19,8 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use(productRouter);
 app.use(orderRouter);
+
+app.use(errors());
 
 app.use((_req, _res, next) => next(new NotFoundError('Маршрут не найден')));
 
