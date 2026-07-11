@@ -39,8 +39,8 @@ app.use((_req, _res, next) => next(new NotFoundError('Маршрут не най
 app.use(errorHandler);
 
 mongoose.connect(DB_ADDRESS).then(() => {
-  console.log('Connected to MongoDB');
+  process.stdout.write('Connected to MongoDB\n');
   app.listen(PORT, () => {
-    console.log(`listening on port ${PORT}`);
+    process.stdout.write(`listening on port ${PORT}\n`);
   });
 });

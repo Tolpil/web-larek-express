@@ -120,6 +120,13 @@
     - `POST /upload` — через `auth` в [`upload.ts`](backend/src/routes/upload.ts)
   - Неавторизованные запросы возвращают `401 UnauthorizedError`
 
+- [x] **Исправления после ревью:**
+  - Добавлена celebrate-валидация для `PATCH /product/:productId` (params + body), `DELETE /product/:productId` (params)
+  - Добавлена celebrate-валидация для `POST /auth/login`, `POST /auth/register` (body), `GET /auth/token`, `GET /auth/logout` (cookies)
+  - Добавлен `JWT_SECRET` в `.env.example`
+  - Удалены неиспользуемые зависимости: `cron`, `ms`, `validator`, `@types/ms`, `@types/validator`
+  - `console.log` заменён на `process.stdout.write` в `app.ts` и `seed.ts`
+
 #### ⏳ Ожидают выполнения
 
 - [ ] Создание pull request `reviews-admin` → `admin`
