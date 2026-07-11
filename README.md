@@ -82,7 +82,7 @@
   - Перенесён код бэкенда из `reviews` командой `git checkout reviews -- backend`
   - Установлены недостающие пакеты фронтенда (`react-toastify`, `vite-plugin-svgr`)
 - [x] **Шаг 6: Регистрация и авторизация**
-  - Установлены пакеты: `bcryptjs`, `jsonwebtoken`, `cookie-parser`, `ms`
+  - Установлены пакеты: `bcryptjs`, `jsonwebtoken`, `cookie-parser`
   - Создана модель [`User`](backend/src/models/user.ts) (name, email, password, tokens)
   - Поля `password` и `tokens` имеют `select: false` для безопасности
   - Создан контроллер [`auth`](backend/src/controllers/auth.ts):
@@ -99,7 +99,7 @@
   - Обновлён [`config.ts`](backend/src/config.ts): `JWT_SECRET`, `AUTH_ACCESS_TOKEN_EXPIRY`, `AUTH_REFRESH_TOKEN_EXPIRY`, `ORIGIN_ALLOW`
 
 - [x] **Шаг 7: Загрузка файлов и CRUD товаров**
-  - Установлены пакеты: `multer`, `cron`
+  - Установлены пакеты: `multer`
   - Создан мидлвар [`file`](backend/src/middlewares/file.ts) — multer с загрузкой в `temp/`, лимит 5 MB, фильтр изображений
   - Создан контроллер [`upload`](backend/src/controllers/upload.ts) — `POST /upload`, возврат `{ fileName, originalName }`
   - Создан роут [`upload`](backend/src/routes/upload.ts) — подключён `fileMiddleware.single('file')`
@@ -127,9 +127,7 @@
   - Удалены неиспользуемые зависимости: `cron`, `ms`, `validator`, `@types/ms`, `@types/validator`
   - `console.log` заменён на `process.stdout.write` в `app.ts` и `seed.ts`
 
-#### ⏳ Ожидают выполнения
-
-- [ ] Создание pull request `reviews-admin` → `admin`
+- [x] **Pull request создан** — `reviews-admin` → `admin`
 
 ---
 
